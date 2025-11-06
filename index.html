@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор Шансов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .result-text {
+            color: white;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-percentage {
+            font-size: 4em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .emoji {
+            font-size: 3em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 Генератор Шансов</h1>
+        
+        <div class="input-group">
+            <label for="question">Шанс того что...</label>
+            <input 
+                type="text" 
+                id="question" 
+                placeholder="завтра я буду весёлым"
+                autocomplete="off"
+            >
+        </div>
+
+        <button onclick="calculateChance()">Узнать шанс!</button>
+
+        <div class="result" id="result">
+            <div class="result-text" id="resultText"></div>
+            <div class="result-percentage" id="percentage"></div>
+            <div class="emoji" id="emoji"></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateChance() {
+            const question = document.getElementById('question').value.trim();
+            const resultDiv = document.getElementById('result');
+            const resultText = document.getElementById('resultText');
+            const percentageDiv = document.getElementById('percentage');
+            const emojiDiv = document.getElementById('emoji');
+
+            if (!question) {
+                alert('Пожалуйста, введите вопрос!');
+                return;
+            }
+
+            // Генерируем случайное число от 0 до 100
+            const chance = Math.floor(Math.random() * 101);
+
+            // Выбираем эмодзи в зависимости от шанса
+            let emoji;
+            if (chance < 20) {
+                emoji = '😢';
+            } else if (chance < 40) {
+                emoji = '😐';
+            } else if (chance < 60) {
+                emoji = '🙂';
+            } else if (chance < 80) {
+                emoji = '😊';
+            } else {
+                emoji = '🎉';
+            }
+
+            // Показываем результат
+            resultText.textContent = `Шанс того что ${question}:`;
+            percentageDiv.textContent = `${chance}%`;
+            emojiDiv.textContent = emoji;
+
+            // Анимация появления
+            resultDiv.classList.remove('show');
+            setTimeout(() => {
+                resultDiv.classList.add('show');
+            }, 100);
+        }
+
+        // Позволяем нажимать Enter для расчёта
+        document.getElementById('question').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateChance();
+            }
+        });
+    </script>
+</body>
+</html>
